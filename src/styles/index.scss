@@ -1,0 +1,42 @@
+@import './variables.scss';
+@import './sidebar.scss';
+@import './transition.scss';
+@import './update-element.scss';
+
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+::selection{ 
+  background-color:var(--el-color-primary); 
+  color:#000; 
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+a:focus,
+a:active {
+  outline: none;
+}
+
+a,
+a:focus,
+a:hover {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+}

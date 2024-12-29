@@ -1,0 +1,35 @@
+// 处理 input 的白/蓝边
+.el-input__inner {
+  box-shadow: none !important;
+  --el-select-input-focus-border-color: none !important;
+}
+
+// 处理 input 白色背景
+// .el-input__wrapper {
+//   background: none !important;
+//   box-shadow: none !important;
+//   --el-select-input-focus-border-color: none !important;
+// }
+
+// 处理图片的灰色底
+.el-avatar {
+  --el-avatar-bg-color: none !important;
+  --el-avatar-background-color: none !important;
+}
+
+// 处理下拉框横线出现高度
+.el-dropdown-menu__item--divided {
+  line-height: 0px;
+}
+
+// 处理 nprogress
+#nprogress .bar {
+	background: var(--el-color-primary) !important;
+}
+#nprogress .spinner-icon {
+	border-top-color: var(--el-color-primary) !important;
+	border-left-color: var(--el-color-primary) !important;
+}
+#nprogress .peg {
+	box-shadow: 0 0 10px var(--el-color-primary), 0 0 5px var(--el-color-primary) !important;
+}

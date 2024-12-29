@@ -1,0 +1,28 @@
+html.dark {
+	--qz-admin-text-color: #CFD3DC;
+	--qz-admin-text-color-1: #fff;
+	--qz-admin-border-color: rgb(65, 66, 67);
+
+	--qz-admin-aside-border-color: rgb(65, 66, 67);
+	--qz-admin-app-main-bg-color: #141414;
+	--qz-menu-hover-bg-color: transparent;
+	--qz-nav-bg-color: #000;
+	--notes-card-bg-color: #1d1e1f;
+	--notes-bg-color: #141414;
+}
+
+html.light {
+	--qz-admin-text-color: #000000;
+	--qz-admin-text-color-1: #cccccc;
+	--qz-admin-border-color: rgba(0, 21, 41, 0.08);
+
+	--qz-admin-aside-border-color: #141414;
+	--qz-admin-app-main-bg-color: #f0f2f5;
+	--qz-menu-hover-bg-color: transparent;
+
+	--qz-nav-bg-color: #fff;
+	--notes-card-bg-color:hsla(0, 0%, 100%, 0.8);
+	--notes-bg-color: #c4fcef;
+	--el-mask-color: hsla(0, 0%, 100%, 0.8);
+
+}
