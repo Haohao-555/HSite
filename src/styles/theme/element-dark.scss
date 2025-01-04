@@ -9,6 +9,7 @@ html.dark {
 	--qz-nav-bg-color: #000;
 	--notes-card-bg-color: #1d1e1f;
 	--notes-bg-color: #141414;
+	--el-sortable-bgcolor: #fafafa;
 }
 
 html.light {
@@ -24,5 +25,5 @@ html.light {
 	--notes-card-bg-color:hsla(0, 0%, 100%, 0.8);
 	--notes-bg-color: #c4fcef;
 	--el-mask-color: hsla(0, 0%, 100%, 0.8);
-
+	--el-sortable-bgcolor: #262727;
 }

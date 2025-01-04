@@ -101,8 +101,10 @@ import {
   ref,
   reactive,
   watch,
-  nextTick
+  nextTick,
+  onMounted
 } from 'vue'
+import Sortable from 'sortablejs'
 const props = defineProps({
   load: {
     type: Boolean,
@@ -143,6 +145,10 @@ const props = defineProps({
   defaultSort: {
     type: Object,
     default: () => { }
+  },
+  issortable: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -150,7 +156,8 @@ const emits = defineEmits([
   'paginationChange',
   'selectionChange',
   'selectable',
-  'sortChange'
+  'sortChange',
+  'sortRowChange'
 ])
 
 const defaultConfig = reactive({
@@ -197,7 +204,7 @@ watch(
 watch(
   () => props.data,
   () => {
-    tableData.value = props.data
+    tableData.value = [...props.data]
     if (
       orderProp.value &&
       order.value &&
@@ -335,11 +342,35 @@ const handleOperEvent = (oper, row, i) => {
   }
 }
 
+const initSortable = () => {
+  // 配置拖拽元素
+  const el = tableRef.value.$el.querySelectorAll('.el-table__body > tbody')[0]
+  Sortable.create(el, {
+    // 拖拽时类名
+    ghostClass: 'sortable-ghost',
+    // 拖拽结束的回调方法
+    onEnd(event) {
+      const { newIndex, oldIndex } = event
+      emits('sortRowChange', { newIndex, oldIndex, data: tableData.value[oldIndex] })
+    }
+  })
+}
+
+onMounted(() => {
+  if (props.issortable) {
+    initSortable(tableRef)
+  }
+})
 </script>
 <style lang="scss" scoped>
 .pagination-container {
   display: flex;
   justify-content: end;
   margin-top: 12px;
+}
+
+::v-deep tr.sortable-ghost td {
+  opacity: 0.6;
+  background-color: var(--el-sortable-bgcolor) !important;
 }
 </style>
