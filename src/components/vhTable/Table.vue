@@ -49,7 +49,7 @@
             <template v-if="!oper.isConfirm">
               <el-button v-if="
                 typeof oper.hidden === 'function'
-                  ? oper.hidden(scope.row, scope.$index)
+                  ? !oper.hidden(scope.row, scope.$index)
                   : true
               " :disabled="typeof oper.disabled === 'function'
                 ? oper.disabled(scope.row, scope.$index)
@@ -67,7 +67,7 @@
                 <template #reference>
                   <el-button v-if="
                     typeof oper.hidden === 'function'
-                      ? oper.hidden(scope.row, scope.$index)
+                      ? !oper.hidden(scope.row, scope.$index)
                       : true
                   " :disabled="typeof oper.disabled === 'function'
                     ? oper.disabled(scope.row, scope.$index)
