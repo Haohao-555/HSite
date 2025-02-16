@@ -20,7 +20,9 @@ export default {
     viewblog: '查看博客',
     createBlog: '创建博客',
     commentManage: '评论管理',
-    accountManage: '账号管理'
+    accountManage: '账号管理',
+    structure: '组织架构',
+    codeLearn: '代码学习'
   },
   login: {
     loginBtn: '登录',

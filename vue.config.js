@@ -6,7 +6,7 @@ module.exports = {
   devServer: {
     proxy: {
       '/notesApi': {
-        target: 'http://127.0.0.1:3200/'
+        target: 'http://39.104.61.32:3200/'
       }
     }
   },

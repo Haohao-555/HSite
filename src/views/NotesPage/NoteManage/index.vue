@@ -32,7 +32,8 @@
         </el-form-item>
       </el-form>
       <div class="btn_group">
-        <el-button @click="exportSelectedData()" :disabled="loading">导出选中</el-button>
+        <el-button @click="exportSelectedData({ isOpenWorker: false, iszip: false, limit: 1 })"
+          :disabled="loading">导出选中</el-button>
         <el-tooltip content="恢复到系统初始条件">
           <el-button @click="reset" :loading="loading" type="warning" plain
             :disabled="query.showHistorytoday">重置</el-button>

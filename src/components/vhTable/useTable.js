@@ -1,7 +1,17 @@
 import { watch, ref, toRaw } from 'vue'
 import Excel from 'exceljs'
 import { saveAs } from 'file-saver'
+import JSZip from 'jszip'
 import ExportWorker from './export.worker.js'
+
+function splitArray(arr = [], limit) {
+  const result = []
+  for (let i = 0; i < arr.length; i += limit) {
+    result.push(arr.slice(i, i + limit))
+  }
+  return result
+}
+
 export const useTable = ({
   // 默认显示的字段
   defaultColumn,
@@ -164,14 +174,14 @@ export const useTable = ({
   }
 
   const exportDataByType = (config) => {
-    const { csvHeader, csvData, fileName, isOpenWorker } = config
+    const { excelData, fileName, isOpenWorker, iszip } = config
 
     // TODO 需要考虑一下 type
 
     if (isOpenWorker) {
-      exportDataToXLSXByWorker(csvHeader, csvData, fileName)
+      exportDataToXLSXByWorker(excelData, fileName, iszip)
     } else {
-      exportDataToXLSX(csvHeader, csvData, fileName)
+      exportDataToXLSX(excelData, fileName, iszip)
     }
   }
 
@@ -182,10 +192,14 @@ export const useTable = ({
    * @param {Boolean} isOpenWorker 是否开启子进程
    */
   const exportAllData = async (
-    fileName = 'exportAllData',
-    isOpenWorker = false,
-    isAllColumn = false,
-    type = 'excel'
+    {
+      fileName = 'exportAllData',
+      isOpenWorker = false,
+      isAllColumn = false,
+      limit = 1000,
+      iszip = false,
+      type = 'excel'
+    }
   ) => {
     const {
       data
@@ -196,15 +210,33 @@ export const useTable = ({
 
     if (data.length === 0) return
 
-    const { csvHeader, csvData } = generateExcelData(data, isAllColumn)
+    const excelData = []
+    if (iszip) { // 拆分数据
+      const splitArr = splitArray(data, limit)
+      splitArr.forEach((item, i) => {
+        const { csvHeader, csvData } = generateExcelData(item, isAllColumn)
+        excelData.push({
+          csvHeader,
+          csvData,
+          fileName: `${fileName}_${i + 1}`
+        })
+      })
+    } else {
+      const { csvHeader, csvData } = generateExcelData(data, isAllColumn)
+      excelData.push({
+        csvHeader,
+        csvData,
+        fileName: `${fileName}`
+      })
+    }
 
     // 导出数据
     exportDataByType({
       type,
-      csvHeader,
-      csvData,
+      excelData,
       isOpenWorker,
-      fileName
+      fileName,
+      iszip
     })
   }
 
@@ -214,20 +246,42 @@ export const useTable = ({
    * @param {Boolean} isOpenWorker 是否开启子进程
    */
   const exportSelectedData = (
+  {
     fileName = 'exportSelectedData',
     isOpenWorker = false,
     isAllColumn = false,
+    limit = 1000,
+    iszip = false,
     type = 'excel'
+  }
   ) => {
     if (selectionRows.value.length === 0) return
 
-    const { csvHeader, csvData } = generateExcelData(selectionRows.value, isAllColumn)
+    const excelData = []
+    if (iszip) {
+      const splitArr = splitArray(selectionRows.value, limit)
+      splitArr.forEach((item, i) => {
+        const { csvHeader, csvData } = generateExcelData(item, isAllColumn)
+        excelData.push({
+          csvHeader,
+          csvData,
+          fileName: `${fileName}_${i + 1}`
+        })
+      })
+    } else {
+      const { csvHeader, csvData } = generateExcelData(selectionRows.value, isAllColumn)
+      excelData.push({
+        csvHeader,
+        csvData,
+        fileName
+      })
+    }
 
     // 导出数据
     exportDataByType({
       type,
-      csvHeader,
-      csvData,
+      excelData,
+      iszip,
       isOpenWorker,
       fileName
     })
@@ -239,14 +293,37 @@ export const useTable = ({
    * @param {Array} csvData 数据
    * @param {String} filename 文件名
    */
-  const exportDataToXLSX = (csvHeader, csvData, filename) => {
-    const workbook = new Excel.Workbook()
-    const worksheet = workbook.addWorksheet('My Sheet')
-    worksheet.columns = csvHeader
-    csvData.forEach(row => worksheet.addRow(row))
-    workbook.xlsx.writeBuffer().then(buffer => {
-      saveAs(new Blob([buffer]), `${filename}.xlsx`)
-    })
+  const exportDataToXLSX = async (excelData, fileName, iszip) => {
+    if (!iszip) excelData = [excelData[0]]
+
+    const excelBufferList = []
+    await Promise.all(excelData.map(async (item, i) => {
+      const workbook = new Excel.Workbook()
+      const worksheet = workbook.addWorksheet('My Sheet')
+      const { csvData, csvHeader, fileName = 'file' } = item
+
+      worksheet.columns = csvHeader
+
+      // 添加数据行
+      csvData.forEach(row => worksheet.addRow(row))
+
+      // 生成 Buffer
+      const buffer = await workbook.xlsx.writeBuffer()
+      excelBufferList.push({ fileName, buffer })
+    }))
+
+    if (!iszip) {
+      const buffer = excelBufferList[0].buffer
+      saveAs(new Blob([buffer]), `${fileName}.xlsx`)
+    } else {
+      const zip = new JSZip()
+      excelBufferList.forEach((item) => {
+        const { fileName = 'file', buffer } = item
+        zip.file(`${fileName}.xlsx`, buffer)
+      })
+      const blobContent = await zip.generateAsync({ type: 'blob' })
+      saveAs(blobContent, `${fileName}.zip`)
+    }
   }
 
   /**
@@ -255,26 +332,34 @@ export const useTable = ({
    * @param {Array} csvData 数据
    * @param {String} filename 文件名
    */
-  const exportDataToXLSXByWorker = (csvHeader, csvData, filename) => {
+  const exportDataToXLSXByWorker = (excelData, filename, iszip) => {
     const worker = new ExportWorker()
 
     // * 判断 csvData 中的值是否存在对象，需要序列化处理
-    const keys = csvHeader.map(item => item.key)
-    csvData = csvData.map(row => {
-      return keys.reduce((acc, prev) => {
-        acc[prev] = typeof row[prev] === 'object' ? JSON.stringify(row[prev]) : row[prev]
-        return acc
-      }, {})
+    excelData = excelData.map((item) => {
+      const { csvHeader, csvData } = item
+      const keys = csvHeader.map(item => item.key)
+      item.csvData = csvData.map(row => {
+        return keys.reduce((acc, prev) => {
+          acc[prev] = typeof row[prev] === 'object' ? JSON.stringify(row[prev]) : row[prev]
+          return acc
+        }, {})
+      })
+      return item
     })
 
     worker.postMessage({
-      csvData: csvData,
-      csvHeader: csvHeader
+      excel: excelData,
+      iszip
     })
 
     worker.onmessage = async(e) => {
-      const { chunk: blog } = e.data
-      saveAs(blog, filename)
+      const { chunk: blog, iszip } = e.data
+      if (iszip) {
+        saveAs(blog, `${filename}.zip`)
+      } else {
+        saveAs(blog, filename)
+      }
     }
   }
 
