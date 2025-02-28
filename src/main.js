@@ -8,6 +8,9 @@ import JsonViewer from 'vue-json-viewer'
 
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
+import VueVirtualScroller from 'vue-virtual-scroller'
+import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
+
 // 初始化样式表
 import '@/styles/index.scss'
 // 暗黑模式
@@ -41,4 +44,4 @@ installElementPlus(app)
 installIcons(app)
 installFilter(app)
 installDirective(app)
-app.use(store).use(router).use(i18n).use(JsonViewer).mount('#app')
+app.use(store).use(router).use(i18n).use(JsonViewer).use(VueVirtualScroller).mount('#app')

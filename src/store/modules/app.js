@@ -14,7 +14,7 @@ export default {
     // 语言
     language: getItem(LANG) || 'zh',
     // 是否显示banner
-    showBanner: true
+    showBanner: false
   }),
   mutations: {
     triggerSidebarOpened(state) {

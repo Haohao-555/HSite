@@ -9,6 +9,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@aximario/json-tree": "^2.2.4",
     "@element-plus/icons-vue": "^2.0.10",
     "@toast-ui/editor": "^3.0.2",
     "@vueuse/core": "^9.13.0",
@@ -18,12 +19,13 @@
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.7",
     "echarts": "^5.4.1",
-    "element-plus": "^2.7.6",
+    "element-plus": "^2.9.3",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "fuse.js": "^6.4.6",
     "highlight.js": "^11.11.1",
     "i18next": "^20.4.0",
+    "lodash": "^4.17.21",
     "mockjs": "^1.1.0",
     "nprogress": "^0.2.0",
     "rgb-hex": "^4.0.0",
@@ -34,6 +36,7 @@
     "vue-i18n": "^9.2.0-beta.26",
     "vue-json-viewer": "^3.0.4",
     "vue-router": "^4.4.0",
+    "vue-virtual-scroller": "^2.0.0-beta.8",
     "vuex": "^4.0.2",
     "wangeditor": "^4.7.6",
     "xlsx": "^0.17.0"

@@ -60,7 +60,7 @@
             {{ notes.createdAt }}
             <span style="margin-right: auto">{{
               notes.site ? '' : '（四跃初酒）'
-            }}</span>
+              }}</span>
           </div>
           <div class="state">
             <el-tag v-if="notes.private" size="small" type="info">私有</el-tag>
@@ -429,7 +429,6 @@ onMounted(() => {
 <style lang="scss" scoped>
 .home_page {
   position: relative;
-  font-family: 'alimama';
 
   .bg_container {
     position: absolute;

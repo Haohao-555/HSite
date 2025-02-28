@@ -22,7 +22,8 @@ export default {
     commentManage: '评论管理',
     accountManage: '账号管理',
     structure: '组织架构',
-    codeLearn: '代码学习'
+    codeLearn: '代码学习',
+    hooktable: 'Hook 表格'
   },
   login: {
     loginBtn: '登录',

@@ -232,6 +232,24 @@ export const publicRoutes = [
               title: 'filterTree',
               icon: 'filterTree'
             }
+          },
+          {
+            path: '/tools/hooktable',
+            name: 'toolsHooktable',
+            component: () => import('@/views/ToolsPage/HookTable/index'),
+            meta: {
+              title: 'hooktable',
+              icon: 'hooktable'
+            }
+          },
+          {
+            path: '/tools/transfer',
+            name: 'toolsTransfer',
+            component: () => import('@/views/ToolsPage/Transfer/index'),
+            meta: {
+              title: 'structure',
+              icon: 'structure'
+            }
           }
         ]
       },

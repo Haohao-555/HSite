@@ -55,7 +55,7 @@
     </div>
     <div class="content_container">
       <div class="table_container">
-        <vhTable ref="tableRef" :height="'calc(100vh - 278px)'" :load="loading" :data="tableData" :issortable="true"
+        <vhTable ref="tableRef" :height="'calc(100vh - 278px)'" :load="loading" :data="tableData"
           :showColumn="showColumn" :columnList="columnList" :indexMethod="indexMethod" :operation="operation"
           :pagination="pagination" :hasPagination="pagination.enable" @paginationChange="getTableData"
           @selectionChange="onSelectionChange" @sortChange="handleSortChange" @sortRowChange="sortRowChange" />
