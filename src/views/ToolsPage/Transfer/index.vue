@@ -3,7 +3,7 @@
     <adminTitle title="组织对象树" />
     <el-form :model="form" ref="formRef" :rules="rules">
       <el-form-item label="对象范围" prop="objRange">
-        <SelectObjRange v-model="form.objRange" />
+        <SelectObjRange v-model="form.objRange" lazy />
       </el-form-item>
       <el-item-item>
         <el-button @click="sumbit" type="primary">提交</el-button>

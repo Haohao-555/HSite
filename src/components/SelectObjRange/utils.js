@@ -121,8 +121,17 @@ export const useTree = () => {
 
   const getLoadData = (pid = 'node-0') => {
     const data = getData()
-    return data.filter(item => item.pid === pid)
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const res = data.filter(item => item.pid === pid).map(item => {
+          delete item.children
+          return item
+        })
+        resolve(res)
+      }, 1000)
+    })
   }
+
   return {
     getData,
     searchData,

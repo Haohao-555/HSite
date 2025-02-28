@@ -28,7 +28,7 @@
           </el-input>
         </div>
         <div class="tree">
-          <el-tree-v2 v-if="!isSearchState" check-on-click-node :expand-on-click-node="false" ref="treeRef"
+          <el-tree-v2 v-if="!isSearchState && !lazy" check-on-click-node :expand-on-click-node="false" ref="treeRef"
             check-strictly highlight-current :data="data" :props="treeProps" show-checkbox :height="324" node-key="id"
             @node-expand="handleNodeExpand">
             <template #default="{ node }">
@@ -38,6 +38,15 @@
               </div>
             </template>
           </el-tree-v2>
+          <el-scrollbar height="324px" v-if="!isSearchState && lazy">
+            <el-tree ref="treeRef" lazy :load="loadNode" check-on-click-node :expand-on-click-node="false"
+              :props="treeProps" :height="324" show-checkbox node-key="id" check-strictly>
+              <template #default="{ node }">
+                {{ node.label }}
+              </template>
+            </el-tree>
+          </el-scrollbar>
+
           <virtualList ref="treeRef" v-if="isSearchState" :height="324" :list="searchList"
             v-model="checkNodesListBykey" />
         </div>
@@ -82,7 +91,16 @@ const isSearchState = ref(false)
 const visibleTooltip = ref(false)
 
 // TODO 校验一下
-const props = defineProps(['modelValue'])
+const props = defineProps({
+  modelValue: {
+    type: Array,
+    default: () => []
+  },
+  lazy: {
+    type: Boolean,
+    default: false
+  }
+})
 const emit = defineEmits(['update:value'])
 const { getData, searchData, getLoadData } = useTree()
 
@@ -96,9 +114,7 @@ const treeProps = {
   children: 'children'
 }
 const flattenData = getData()
-let data = construct(flattenData)
-const data1 = construct(getLoadData())
-data = data1
+const data = construct(flattenData)
 
 const taggleTooltip = (state) => {
   visibleTooltip.value = state && objLabel.value.length !== 0
@@ -123,6 +139,16 @@ const getIcon = (node) => {
   return icon
 }
 
+const loadNode = async (node, resolve) => {
+  if (node.level === 0) {
+    const res = await getLoadData()
+    resolve(res)
+  } else {
+    const { id } = node.data
+    const res = await getLoadData(id)
+    resolve(res)
+  }
+}
 const showObjdialog = () => {
   visible.value = true
   nextTick(() => {
