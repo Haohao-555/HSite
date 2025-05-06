@@ -15,7 +15,7 @@
 
 ### 日记管理
 
-![](https://hhmax.oss-cn-guangzhou.aliyuncs.com/img/20250506171409563.png)
+![](https://hhmax.oss-cn-guangzhou.aliyuncs.com/img/20250506171626877.png)
 
 ![](https://hhmax.oss-cn-guangzhou.aliyuncs.com/img/9.png)
 
